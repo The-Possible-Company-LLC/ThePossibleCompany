@@ -12,10 +12,10 @@ export default function Header() {
       </a>
       <div className="container">
         <div className="header-inner">
-          {/* TODO: Replace /logo.svg with the real The Possible Company logo from your
+          {/* TODO: Replace /public/logo.svg with the real The Possible Company logo from your
               OneDrive / email signature / PowerPoint brand assets. */}
           <Link to="/" className="header-logo" aria-label="The Possible Company — Home">
-            <img src="/logo.svg" alt="The Possible Company" height="40" />
+            <img src="/public/logo.svg" alt="The Possible Company" height="40" />
           </Link>
 
           <Navigation isOpen={navOpen} onToggle={() => setNavOpen((o) => !o)} />
