@@ -164,7 +164,9 @@ npm run build
 # Then push the dist/ folder to the gh-pages branch, or use the gh-pages npm package.
 ```
 
-Add `base: '/repo-name/'` to `vite.config.ts` if deploying to a GitHub Pages sub-path.
+This project is configured with `base: '/ThePossibleCompany/'` in `vite.config.ts` for deployment to `https://AquinoN.github.io/ThePossibleCompany/`.
+
+> **Important:** Asset references in `index.html` must use relative paths (no leading `/`) so Vite can correctly prepend the `base` during build. For example, use `href="favicon.svg"` and `src="src/main.tsx"` instead of `href="/favicon.svg"` and `src="/src/main.tsx"`. Root-absolute paths resolve to the GitHub Pages domain root, causing 404s for favicons and scripts.
 
 ### Netlify / Vercel
 
