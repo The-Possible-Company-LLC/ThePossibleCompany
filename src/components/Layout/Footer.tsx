@@ -9,8 +9,7 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand */}
           <div className="footer-brand">
-            {/* TODO: Replace with real logo from brand assets */}
-            <img src="/logo.svg" alt="The Possible Company" height="36" />
+            <img src="/logo_orange_transparent.png" alt="The Possible Company" height="36" />
             <p>
               Bridging the AI Literacy Gap for small businesses, nonprofits, and community
               organizations. Anything's possible.
