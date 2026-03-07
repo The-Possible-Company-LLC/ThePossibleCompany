@@ -12,7 +12,7 @@ export default function Header() {
       </a>
       <div className="container">
         <div className="header-inner">
-          <Link to="/" className="header-logo" aria-label="The Possible Company — Home">
+          <Link to="/" className="header-logo" aria-label="The Possible Company - Home">
             <img src="/logo_orange_transparent.png" alt="The Possible Company" height="40" />
           </Link>
 
