@@ -13,7 +13,7 @@ export default function Header() {
       <div className="container">
         <div className="header-inner">
           <Link to="/" className="header-logo" aria-label="The Possible Company - Home">
-            <img src="/logo_orange_transparent.png" alt="The Possible Company" height="40" />
+            <img src={`${import.meta.env.BASE_URL}logo_orange_transparent.png`} alt="The Possible Company" height="40" />
           </Link>
 
           <Navigation isOpen={navOpen} onToggle={() => setNavOpen((o) => !o)} />
