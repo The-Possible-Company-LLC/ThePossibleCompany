@@ -67,8 +67,15 @@ src/
 │   ├── Services.tsx          # /services — Assess, Educate, Implement, Support
 │   ├── WhoWeServe.tsx        # /who-we-serve — Audience cards, challenges
 │   ├── Philosophy.tsx        # /philosophy — Core principles
-│   ├── Resources.tsx         # /resources — Articles and guides
+│   ├── Resources.tsx         # /resources — Article cards from data registry
+│   ├── ResourceArticle.tsx   # /resources/:slug — Individual article page
 │   └── Contact.tsx           # /contact — Contact info + form
+│
+├── data/
+│   └── articles.ts           # Article metadata registry
+│
+├── articles/                 # Per-article content components
+│   └── bridging-ai-literacy-gap.tsx
 │
 ├── components/
 │   ├── Layout/
@@ -101,8 +108,62 @@ public/
 | `/services` | Services | Detailed Assess / Educate / Implement / Support sections |
 | `/who-we-serve` | Who We Serve | Small businesses, nonprofits, HOAs/community orgs |
 | `/philosophy` | Philosophy | Literacy-first, human-centered, responsible AI, quality over quantity |
-| `/resources` | Resources | Featured article + placeholder resource grid |
+| `/resources` | Resources | Featured article + resource grid with archived section |
+| `/resources/:slug` | ResourceArticle | Individual article page, rendered by slug |
 | `/contact` | Contact | Contact info + client-side validated form |
+
+---
+
+## Adding a New Resource Article
+
+Resource articles are managed through a small data registry plus a per-article content component.
+
+### Files involved
+
+| File | Purpose |
+|---|---|
+| `src/data/articles.ts` | Article metadata registry (title, slug, date, excerpt, tags, archived flag) |
+| `src/articles/<slug>.tsx` | Article body content as a React component |
+| `src/pages/ResourceArticle.tsx` | Generic article page that renders by slug — update the `contentComponents` map here |
+
+### Step-by-step
+
+1. **Add a metadata entry** to `src/data/articles.ts`:
+
+   ```ts
+   {
+     slug: 'my-new-article',          // URL: /resources/my-new-article
+     tag: 'Guide',                    // Label shown on card
+     title: 'My New Article Title',
+     excerpt: 'A short description shown on the Resources page.',
+     date: 'April 2025',
+     readTime: '5 min read',          // Set to null if not yet published
+     archived: false,                 // true = hidden by default, shown under "Archived"
+     featured: false,                 // true = shown in the Featured Resource hero card
+   },
+   ```
+
+2. **Create a content component** at `src/articles/my-new-article.tsx`:
+
+   ```tsx
+   export default function MyNewArticle() {
+     return (
+       <article className="article-body">
+         <p>Your article content here…</p>
+       </article>
+     );
+   }
+   ```
+
+3. **Register the content component** in `src/pages/ResourceArticle.tsx` by adding an entry to `contentComponents`:
+
+   ```ts
+   'my-new-article': lazy(() => import('../articles/my-new-article')),
+   ```
+
+That's it. The Resources page and routing update automatically.
+
+> **Archiving articles:** Set `archived: true` in the article's metadata entry. Archived articles are hidden by default on the Resources page and revealed via a "Show Archived" toggle.
 
 ---
 
@@ -138,7 +199,7 @@ To change the Google Font, update the `@import` at the top of `global.css` and t
 2. **`src/pages/About.tsx`** — Founder bio paragraph and company story
 3. **`src/pages/Contact.tsx`** — Form backend integration (see TODO comment)
 4. **`src/components/Layout/Footer.tsx`** — Verify contact details are current
-5. **`src/pages/Resources.tsx`** — Replace placeholder article stubs with real content
+5. **`src/pages/Resources.tsx`** — See "Adding a New Resource Article" above for the full workflow
 
 Look for `// TODO:` comments throughout the codebase for specific sections that need real content.
 

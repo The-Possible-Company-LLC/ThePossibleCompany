@@ -6,6 +6,7 @@ import Services from './pages/Services';
 import WhoWeServe from './pages/WhoWeServe';
 import Philosophy from './pages/Philosophy';
 import Resources from './pages/Resources';
+import ResourceArticle from './pages/ResourceArticle';
 import Contact from './pages/Contact';
 
 export const router = createBrowserRouter([
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
       { path: 'who-we-serve', element: <WhoWeServe /> },
       { path: 'philosophy', element: <Philosophy /> },
       { path: 'resources', element: <Resources /> },
+      { path: 'resources/:slug', element: <ResourceArticle /> },
       { path: 'contact', element: <Contact /> },
     ],
   },

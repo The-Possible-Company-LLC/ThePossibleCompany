@@ -1,53 +1,14 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import articles from '../data/articles';
 import CallToActionSection from '../components/CallToActionSection';
 
-// TODO: Replace placeholder resources with real articles from businessdocuments.
-// This structure is designed to grow into a full blog or knowledge base.
-const resources = [
-  {
-    tag: 'Featured Article',
-    title: 'Bridging the AI Literacy Gap: How Small Organizations Can Adopt AI Without Enterprise Budgets',
-    summary:
-      'The gap between large enterprises and smaller organizations isn\'t about access to AI tools — it\'s about literacy, governance, and practical support. This article explores the widening divide and what smaller organizations can do about it today.',
-    date: 'March 2025',
-    readTime: '8 min read',
-    // TODO: Replace with real article URL or internal route when content is ready.
-    href: '#',
-    featured: true,
-  },
-  {
-    tag: 'Workshop Recap',
-    title: 'AI Literacy in the Nonprofit Sector: Key Takeaways',
-    summary:
-      'A summary of common questions, concerns, and "aha moments" from our nonprofit AI literacy workshops. What leaders really want to know about AI — and what surprises them most.',
-    date: 'Coming Soon',
-    readTime: null,
-    href: '#',
-    featured: false,
-  },
-  {
-    tag: 'Guide',
-    title: 'Microsoft 365 Copilot: What Small Organizations Actually Get',
-    summary:
-      'A plain-language breakdown of what Microsoft 365 Copilot does, what it costs, and which features matter most for organizations with 5–50 employees.',
-    date: 'Coming Soon',
-    readTime: null,
-    href: '#',
-    featured: false,
-  },
-  {
-    tag: 'Best Practices',
-    title: 'Before You Turn On Copilot: A 5-Step Governance Checklist',
-    summary:
-      'Five things every organization should have in place before enabling AI tools — from acceptable-use policies to data hygiene basics.',
-    date: 'Coming Soon',
-    readTime: null,
-    href: '#',
-    featured: false,
-  },
-];
-
 export default function Resources() {
-  const [featured, ...rest] = resources;
+  const [showArchived, setShowArchived] = useState(false);
+
+  const featured = articles.find((a) => a.featured && !a.archived);
+  const active = articles.filter((a) => !a.featured && !a.archived);
+  const archived = articles.filter((a) => a.archived);
 
   return (
     <>
@@ -64,47 +25,48 @@ export default function Resources() {
       </section>
 
       {/* Featured Article */}
-      <section className="section">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-label">Start Here</span>
-            <h2 className="section-title">Featured Resource</h2>
-          </div>
+      {featured && (
+        <section className="section">
+          <div className="container">
+            <div className="section-header">
+              <span className="section-label">Start Here</span>
+              <h2 className="section-title">Featured Resource</h2>
+            </div>
 
-          <div
-            className="card"
-            style={{
-              maxWidth: '800px',
-              margin: '0 auto',
-              padding: 'var(--space-10)',
-              borderLeft: '4px solid var(--color-primary)',
-            }}
-          >
-            <span className="resource-card-tag">{featured.tag}</span>
-            <h2 style={{ marginBottom: 'var(--space-4)', fontSize: 'var(--text-2xl)' }}>
-              {featured.title}
-            </h2>
-            <p style={{ marginBottom: 'var(--space-6)' }}>{featured.summary}</p>
             <div
+              className="card"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--space-6)',
-                flexWrap: 'wrap',
+                maxWidth: '800px',
+                margin: '0 auto',
+                padding: 'var(--space-10)',
+                borderLeft: '4px solid var(--color-primary)',
               }}
             >
-              <span className="resource-card-meta">
-                {featured.date}
-                {featured.readTime && ` · ${featured.readTime}`}
-              </span>
-              {/* TODO: Update href when full article is published. */}
-              <a href={featured.href} className="btn btn--primary">
-                Read Article
-              </a>
+              <span className="resource-card-tag">{featured.tag}</span>
+              <h2 style={{ marginBottom: 'var(--space-4)', fontSize: 'var(--text-2xl)' }}>
+                {featured.title}
+              </h2>
+              <p style={{ marginBottom: 'var(--space-6)' }}>{featured.excerpt}</p>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--space-6)',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <span className="resource-card-meta">
+                  {featured.date}
+                  {featured.readTime && ` · ${featured.readTime}`}
+                </span>
+                <Link to={`/resources/${featured.slug}`} className="btn btn--primary">
+                  Read Article
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* More Resources */}
       <section className="section section--alt">
@@ -113,27 +75,95 @@ export default function Resources() {
             <span className="section-label">More Resources</span>
             <h2 className="section-title">Coming Soon</h2>
             <p className="section-subtitle">
-              We're building out a library of practical guides, workshop recaps, and how-to
-              articles. Check back soon — or contact us to request a topic.
+              We&rsquo;re building out a library of practical guides, workshop recaps, and how-to
+              articles. Check back soon &mdash; or contact us to request a topic.
             </p>
           </div>
 
           <div className="grid grid--3">
-            {rest.map((resource, i) => (
-              <article key={i} className="resource-card">
+            {active.map((resource) => (
+              <article key={resource.slug} className="resource-card">
                 <div className="resource-card-body">
                   <span className="resource-card-tag">{resource.tag}</span>
                   <h3>
-                    <a href={resource.href}>{resource.title}</a>
+                    {resource.readTime ? (
+                      <Link to={`/resources/${resource.slug}`}>{resource.title}</Link>
+                    ) : (
+                      resource.title
+                    )}
                   </h3>
-                  <p>{resource.summary}</p>
+                  <p>{resource.excerpt}</p>
                   <p className="resource-card-meta">{resource.date}</p>
+                  {resource.readTime && (
+                    <Link
+                      to={`/resources/${resource.slug}`}
+                      className="btn btn--outline"
+                      style={{ marginTop: 'var(--space-4)', fontSize: 'var(--text-sm)' }}
+                    >
+                      Read article
+                    </Link>
+                  )}
                 </div>
               </article>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Archived Section */}
+      {archived.length > 0 && (
+        <section className="section">
+          <div className="container">
+            <div className="section-header">
+              <span className="section-label">Archive</span>
+              <h2 className="section-title">Archived Resources</h2>
+              <p className="section-subtitle">Older articles kept for reference.</p>
+            </div>
+
+            <div style={{ textAlign: 'center', marginBottom: 'var(--space-8)' }}>
+              <button
+                className="btn btn--outline"
+                onClick={() => setShowArchived((v) => !v)}
+                aria-expanded={showArchived}
+              >
+                {showArchived
+                  ? 'Hide Archived'
+                  : `Show ${archived.length} Archived Article${archived.length === 1 ? '' : 's'}`}
+              </button>
+            </div>
+
+            {showArchived && (
+              <div className="grid grid--3">
+                {archived.map((resource) => (
+                  <article key={resource.slug} className="resource-card">
+                    <div className="resource-card-body">
+                      <span className="resource-card-tag">{resource.tag}</span>
+                      <h3>
+                        {resource.readTime ? (
+                          <Link to={`/resources/${resource.slug}`}>{resource.title}</Link>
+                        ) : (
+                          resource.title
+                        )}
+                      </h3>
+                      <p>{resource.excerpt}</p>
+                      <p className="resource-card-meta">{resource.date}</p>
+                      {resource.readTime && (
+                        <Link
+                          to={`/resources/${resource.slug}`}
+                          className="btn btn--outline"
+                          style={{ marginTop: 'var(--space-4)', fontSize: 'var(--text-sm)' }}
+                        >
+                          Read article
+                        </Link>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <CallToActionSection
